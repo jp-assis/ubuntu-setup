@@ -130,6 +130,10 @@ export ROS_DOMAIN_ID=51
 ## Localhost >> default is network
 export ROS_LOCALHOST_ONLY=1
 
+# argcomplete for ros2 & colcon
+eval "$(register-python-argcomplete3 ros2)"
+eval "$(register-python-argcomplete3 colcon)"
+
 # Source ROS HUMBLE
 source /opt/ros/humble/setup.zsh
 
