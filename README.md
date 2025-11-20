@@ -1,96 +1,62 @@
 # Ubuntu Setup
 
-This project provides scripts to automate the setup of a fresh Ubuntu installation with all the tools and configurations I usually need.
+Script to bootstrap a fresh **Ubuntu 22.04** with common repositories, packages and Zsh theme. Dotfiles are handled separately via the `.dotfiles` repo.
 
-## Overview
-
-The main script installs a collection of essential packages and configurations, including:
-
-- **Python**
-- **Visual Studio Code**
-- **Google Chrome**
-- **Docker**
-- **Terminator** (terminal emulator)
-- **Powerlevel10k** (zsh theme)
-- And much more
-
-All the packages to be installed are listed in `config-files/apt-packages.txt`.
-
-## Features
-
-- **Automated Package Installation**: Installs all necessary packages listed in `apt-packages.txt`.
-- **Repository Setup**: Adds necessary repositories and imports GPG keys.
-- **Configuration Files**: Copies configuration files for Zsh, Powerlevel10k, and Terminator.
-- **Optional**: Allows optional installation of Grub Customizer via a command-line option.
-- **Export Scripts**: Includes scripts to export the list of installed packages and GPG keys from the current system.
-
-## Scripts
-
-### Main Script
-
-- **`setup_ubuntu.sh`**: The main script that sets up your Ubuntu environment.
-
-### Export Scripts (located in `export/`)
-
-1. **`export_packages.sh`**: Creates `apt-packages.txt` based on all packages installed on the running machine.
-2. **`get_gpg.sh`**: Creates the `repo_keys.gpg` file containing all GPG keys for the repositories.
-
-## Usage
-
-**This script is designed for Ubuntu systems.**
-
-### Running the Setup Script
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/yourusername/ubuntu-setup.git
-   cd ubuntu-setup
-   ```
-2. **Make the Script Executable**
-   ```bash
-    chmod +x setup_ubuntu.sh
-    ```
-3. **Run the Script**
-    ```bash
-    ./setup_ubuntu.sh [OPTIONS]
-    ```
-
-#### **Options**
-- **`--grub`**: Installs Grub Customizer.
-- **`--help`**: Installs Grub Customizer.
-
-#### **Example**
+Clone the submodules:
 ```bash
-./setup_ubuntu.sh --grub
+git clone --recurse-submodules <YOUR-REPO-URL> ~/setup && cd ~/setup
+````
+
+
+## Quick Start
+
+```bash
+chmod +x setup.sh
+./setup.sh          # default setup
+./setup.sh --grub   # include Grub Customizer
+./setup.sh --help   # show options
 ```
-### Exporting Installed Packages and GPG Keys
 
-1. **Export Packages**
-    Navigate to the export/ directory and run:
-    ```bash
-    cd export/
-    chmod +x export_packages.sh
-    ./export_packages.sh
-    ```
-    This will generate **`apt-packages.txt`** in the config-files/ directory.
+What it does:
 
-2. **Export GPG Keys**
-    Navigate to the export/ directory and run:
-    ```bash
-    chmod +x get_gpg.sh
-    ./get_gpg.sh
-    ```
-    This will create **`repo_keys.gpg`**.
+* Adds APT repos: **Docker**, **Google Chrome**, **VS Code**.
+* Imports optional custom GPG keyring from `config-files/gpg-keys/repo_keys.gpg`.
+* Installs packages listed in `config-files/required_packages.txt`.
+* Upgrades existing packages.
+* Installs **Powerlevel10k** theme for Zsh (if `~/.oh-my-zsh` exists).
 
-### Customization
-- Adding/Removing Packages
 
-    - Edit **`config-files/apt-packages.txt`** to add or remove packages as needed.
-    - The script will install packages listed in this file.
+## Exporting Packages and GPG Keys
 
-- Adjusting Repositories
+Inside `export/` there are two helper scripts:
 
-    - Update repository URLs and keys in **`setup_ubuntu.sh`** if necessary.
+### 1. Export installed packages
 
-### Compatibility
-- Designed for Ubuntu 22.04 LTS (Jammy Jellyfish)
+```bash
+cd export/
+chmod +x export_packages.sh
+./export_packages.sh
+```
+
+Creates **`config-files/apt-packages.txt`** with your installed packages.
+
+### 2. Export GPG keys
+
+```bash
+cd export/
+chmod +x get_gpg.sh
+./get_gpg.sh
+```
+
+Creates **`config-files/gpg-keys/repo_keys.gpg`**, used by `setup.sh` to import custom APT keys.
+
+
+## Customization
+
+* **Packages:** edit `config-files/required_packages.txt`.
+* **Repositories / keys:** adjust URLs and GPG handling directly in `setup.sh`.
+
+
+---
+
+Designed for **Ubuntu 22.04 LTS (Jammy Jellyfish)**.
