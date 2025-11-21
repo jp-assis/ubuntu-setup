@@ -124,22 +124,25 @@ display_progress
 # 4. VS Code repo + optional Grub PPA + apt update
 echo 'Adding Visual Studio Code APT repository'
 sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
-    | gpg --dearmor > /tmp/packages.microsoft.gpg
-sudo install -D -o root -g root -m 644 /tmp/packages.microsoft.gpg /etc/apt/keyrings/microsoft.gpg
-rm -f /tmp/packages.microsoft.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
-  | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
-
-if [ "$INSTALL_GRUB_CUSTOMIZER" = true ]; then
-    echo 'Adding Grub Customizer PPA'
-    sudo apt-get update -y
-    sudo apt-get install -y software-properties-common
-    sudo add-apt-repository -y ppa:danielrichter2007/grub-customizer
+if [ -f /usr/share/keyrings/microsoft.gpg ]; then
+    MS_KEYRING="/usr/share/keyrings/microsoft.gpg"
+else
+    MS_KEYRING="/etc/apt/keyrings/microsoft.gpg"
+    if [ ! -f "$MS_KEYRING" ]; then
+        curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
+            | gpg --dearmor > /tmp/packages.microsoft.gpg
+        sudo install -D -o root -g root -m 644 /tmp/packages.microsoft.gpg "$MS_KEYRING"
+        rm -f /tmp/packages.microsoft.gpg
+    else
+        echo "  - Microsoft keyring already exists at $MS_KEYRING"
+    fi
 fi
-
-echo 'Updating APT package lists'
-sudo apt-get update -y
+if grep -R "https://packages.microsoft.com/repos/code" /etc/apt/sources.list /etc/apt/sources.list.d >/dev/null 2>&1; then
+    echo "  - VS Code repository already configured, skipping"
+else
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=${MS_KEYRING}] https://packages.microsoft.com/repos/code stable main" \
+        | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
+fi
 display_progress
 
 # 5. Install packages + upgrade
