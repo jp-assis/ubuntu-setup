@@ -72,7 +72,7 @@ fi
 ####################################################################
 # PROGRESS BAR
 ####################################################################
-TOTAL_STEPS=6
+TOTAL_STEPS=8
 CURRENT_STEP=0
 
 display_progress() {
@@ -161,7 +161,19 @@ echo 'Upgrading existing packages'
 sudo apt-get upgrade -y
 display_progress
 
-# 6. Powerlevel10k
+# 6. Oh My Zsh
+echo 'Installing Oh My Zsh (if not present)'
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || {
+        echo "Warning: failed to install Oh My Zsh (network or curl issue)."
+    }
+else
+    echo "Oh My Zsh already installed at $HOME/.oh-my-zsh"
+fi
+display_progress
+
+# 7. Powerlevel10k
 echo 'Installing Powerlevel10k Zsh theme (if not present)'
 ZSH_CUSTOM_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 if [ ! -d "${ZSH_CUSTOM_DIR}/themes/powerlevel10k" ]; then
@@ -172,6 +184,15 @@ if [ ! -d "${ZSH_CUSTOM_DIR}/themes/powerlevel10k" ]; then
     }
 else
     echo "Powerlevel10k already installed at ${ZSH_CUSTOM_DIR}/themes/powerlevel10k"
+fi
+display_progress
+
+# 8. Change shell to zsh if not already
+if [ "$SHELL" != "/bin/zsh" ]; then
+    echo 'Changing default shell to zsh'
+    chsh -s /bin/zsh || {
+        echo "Warning: failed to change default shell to zsh."
+    }
 fi
 display_progress
 
