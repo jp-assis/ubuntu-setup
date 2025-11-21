@@ -1,12 +1,6 @@
 # Ubuntu Setup
 
-Script to bootstrap a fresh **Ubuntu 22.04** with common repositories, packages and Zsh theme. Dotfiles are handled separately via the `.dotfiles` repo.
-
-Clone the submodules:
-```bash
-git clone --recurse-submodules <YOUR-REPO-URL> ~/setup && cd ~/setup
-````
-
+Script to bootstrap a fresh **Ubuntu 22.04** with common repositories, packages and Zsh theme. 
 
 ## Quick Start
 
@@ -22,7 +16,6 @@ What it does:
 * Adds APT repos: **Docker**, **Google Chrome**, **VS Code**.
 * Imports optional custom GPG keyring from `config-files/gpg-keys/repo_keys.gpg`.
 * Installs packages listed in `config-files/required_packages.txt`.
-* Upgrades existing packages.
 * Installs **Powerlevel10k** theme for Zsh (if `~/.oh-my-zsh` exists).
 
 
@@ -55,7 +48,6 @@ Creates **`config-files/gpg-keys/repo_keys.gpg`**, used by `setup.sh` to import 
 
 * **Packages:** edit `config-files/required_packages.txt`.
 * **Repositories / keys:** adjust URLs and GPG handling directly in `setup.sh`.
-
 
 ---
 
