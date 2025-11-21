@@ -5,7 +5,6 @@ git
 gpg
 curl
 grep
-htop
 vim
 zsh
 fzf
@@ -15,6 +14,7 @@ feh
 tmux
 nano
 htop
+stow
 google-chrome-stable
 docker-buildx-plugin
 docker-ce
@@ -25,4 +25,3 @@ gnome-shell-extensions
 gnome-tweaks
 libpython3-dev
 python3-pip
-python3-vcstools
